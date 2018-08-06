@@ -1,0 +1,79 @@
+<template>
+  <div class="players">
+    <h1>Edit Player</h1>
+      <div class="form">
+        <div>
+          <input type="text" name="title" placeholder="TITLE" v-model="title">
+        </div>
+        <div>
+          <textarea rows="15" cols="15" placeholder="DESCRIPTION" v-model="description"></textarea>
+        </div>
+        <div>
+          <button class="app_player_btn" @click="updatePlayer">Update</button>
+        </div>
+      </div>
+  </div>
+</template>
+
+<script>
+import PlayersService from '@/services/PlayersService'
+export default {
+  name: 'editplayer',
+  data () {
+    return {
+      title: '',
+      description: ''
+    }
+  },
+  mounted () {
+    this.getPlayer()
+  },
+  methods: {
+    async getPlayer () {
+      const response = await PlayersService.getPlayer({
+        id: this.$route.params.id
+      })
+      this.title = response.data.title
+      this.description = response.data.description
+      // this.$router.push({ name: 'Players' })
+    },
+    async updatePlayer () {
+      await PlayersService.updatePlayer({
+        id: this.$route.params.id,
+        title: this.title,
+        description: this.description
+      })
+      this.$swal(
+        'Great!',
+        `Your player has been updated!`,
+        'success'
+      )
+      this.$router.push({ name: 'Players' })
+    }
+  }
+}
+</script>
+<style type="text/css">
+.form input, .form textarea {
+  width: 500px;
+  padding: 10px;
+  border: 1px solid #e0dede;
+  outline: none;
+  font-size: 12px;
+}
+.form div {
+  margin: 20px;
+}
+.app_player_btn {
+  background: #4d7ef7;
+  color: #fff;
+  padding: 10px 80px;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: bold;
+  width: 520px;
+  border: none;
+  cursor: pointer;
+}
+</style>
+

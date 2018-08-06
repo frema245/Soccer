@@ -19,11 +19,17 @@ app.get('/player', (req, res) => {
   let search = req.query.search;
   let age_min = req.query.age_min;
   let age_max = req.query.age_max;
+  let kg_min = req.query.kg_min;
+  let kg_max = req.query.kg_max;
+  let cm_min = req.query.cm_min;
+  let cm_max = req.query.cm_max;
   let toefl_score_min = req.query.toefl_score_min;
   let toefl_score_max = req.query.toefl_score_max;
-  let nationality = req.query.nationality;
   let sat_score_min = req.query.sat_score_min;
   let sat_score_max = req.query.sat_score_max;
+  let act_score_min = req.query.act_score_min;
+  let act_score_max = req.query.act_score_max;
+  let nationality = req.query.nationality;
   let positions = [];
 
   console.log("search in backend = " + search)
@@ -51,7 +57,6 @@ app.get('/player', (req, res) => {
     query.where({ $text: { $search: search}});
     //query.or([{name_first: new RegExp('^'+search+'$', "i")},{name_last: new RegExp('^'+search+'$', "i")}]);
   }
-
   // TODO: Fix this after feedback
   if (positions.length) {
     console.log("Well, there are positinos");
@@ -77,7 +82,14 @@ app.get('/player', (req, res) => {
   if (toefl_score_max || toefl_score_min) {
     if (!toefl_score_min) {toefl_score_min = 0}
     if (!toefl_score_max) {toefl_score_max = 2500}
-    query.where('sat_score').gt(toefl_score_min-1).lt(toefl_score_max);
+    query.where('toefl_score').gt(toefl_score_min-1).lt(toefl_score_max);
+  }
+
+  // ACT filtering
+  if (act_score_max || act_score_min) {
+    if (!act_score_min) {act_score_min = 0}
+    if (!act_score_max) {act_score_max = 2500}
+    query.where('act_score').gt(act_score_min-1).lt(act_score_max);
   }
 
   // Age filtering
@@ -85,6 +97,20 @@ app.get('/player', (req, res) => {
     if (!age_min) {age_min = 0}
     if (!age_max) {age_max = 100}
     query.where('age').gt(age_min-1).lt(age_max);
+  }
+
+  // cm (height) filtering
+  if (cm_max || cm_min) {
+    if (!cm_min) {cm_min = 0}
+    if (!cm_max) {cm_max = 250}
+    query.where('cm').gt(cm_min-1).lt(cm_max);
+  }
+
+  // kg (weight) filtering
+  if (kg_max || kg_min) {
+    if (!kg_min) {kg_min = 0}
+    if (!kg_max) {kg_max = 250}
+    query.where('kg').gt(kg_min-1).lt(kg_max);
   }
 
   query.
@@ -101,7 +127,7 @@ app.get('/player', (req, res) => {
 
 });
 
-app.get('/playerz', (req, res) => {
+app.get('/player', (req, res) => {
   Player.find({}, 'name age presentation joined position toefl sat', function (error, players) {
     if (error) { console.error(error); }
     res.send({
