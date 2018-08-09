@@ -91,7 +91,16 @@
     }
   }
 </script>
-<style>
+<style scoped>
+
+  p {
+    color: rgba(255, 250, 252, 0.8);
+  }
+
+  li {
+    color: rgba(255, 250, 252, 0.8);
+  }
+
   .vuejs-countdown {
     padding: 0;
     margin: 0;
@@ -135,13 +144,17 @@
 
   @media screen and (max-width: 500px) {
     .vuejs-countdown li:after {
-      font-size: 45px
+      font-size: 45px;
+      right: -20px;
     }
     .vuejs-countdown .digit {
       font-size: 45px
     }
     .vuejs-countdown .text {
       font-size: 14px
+    }
+    .vuejs-countdown li {
+      margin: 0 10px;
     }
   }
 </style>

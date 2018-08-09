@@ -5,6 +5,12 @@
         <div>
           <input type="text" name="title" placeholder="TITLE" v-model="title">
         </div>
+
+
+
+
+
+
         <div>
           <textarea rows="15" cols="15" placeholder="DESCRIPTION" v-model="description"></textarea>
         </div>
