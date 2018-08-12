@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Players from '@/components/Players'
-import addplayer from '@/components/AddPlayer'
-import editplayer from '@/components/EditPlayer'
+import AddPlayer from '@/components/AddPlayer'
+import EditPlayer from '@/components/EditPlayer'
 
 Vue.use(Router)
 
@@ -15,13 +15,13 @@ export default new Router({
       component: Players
     },
     {
-      path: '/players/add',
-      component: addplayer,
+      path: '/add',
+      component: AddPlayer,
       name: 'addplayer'
     },
     {
       path: '/players/:id/edit',
-      component: editplayer,
+      component: EditPlayer,
       name: 'editplayer'
     }
   ]

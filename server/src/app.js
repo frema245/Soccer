@@ -115,7 +115,7 @@ app.get('/player', (req, res) => {
 
   query.
   //sort({_id:-1}).
-  select('name_first name_last age positions nationality sat_score').
+  select('name_first name_last age gender positions nationality sat_score toefl_score act_score presentation birth_date phone_number email skype cm kg').
   exec(
     function (error, players) {
       if (error) { console.error(error); }
@@ -127,7 +127,7 @@ app.get('/player', (req, res) => {
 
 });
 
-app.get('/player', (req, res) => {
+app.get('/playerz', (req, res) => {
   Player.find({}, 'name age presentation joined position toefl sat', function (error, players) {
     if (error) { console.error(error); }
     res.send({
@@ -142,6 +142,7 @@ app.post('/add_player', (req, res) => {
     name_first: req.body.name_first,
     name_last: req.body.name_last,
     age: req.body.age,
+    gender: req.body.gender,
     presentation: req.body.presentation,
     birth_date: req.body.birth_date,
     join_date: req.body.join_date,
@@ -149,8 +150,12 @@ app.post('/add_player', (req, res) => {
     positions: req.body.positions,
     toefl_score: req.body.toefl_score,
     sat_score: req.body.sat_score,
+    act_score: req.body.act_score,
     phone_number: req.body.phone_number,
-    email: req.body.email
+    email: req.body.email,
+    skype: req.body.skype,
+    cm: req.body.cm,
+    kg: req.body.kg
 	});
 
 	new_player.save(function (error) {
