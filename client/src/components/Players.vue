@@ -1,6 +1,8 @@
 <template>
   <div class="container">
 
+    <h2>Match players to your needs</h2>
+
     <div class="row" style="user-select: none;">
 
       <div class="col-md-6">
@@ -48,20 +50,61 @@
 
       <div class="col-md-6">
 
-        Other shit
+        <div class="mb-4">
+          <h6><b>SAT:</b><i>{{satSliderDisplay}}</i></h6>
+          <vue-slider
+            v-model="satSliderValue"
+            ref="satSlider"
+            :min=0
+            :max=2000
+            :interval=10
+            tooltip=false
+            :process-style=processStyle
+          />
+        </div>
+
+        <div class="mb-4">
+          <h6><b>Toefl:</b><i>{{toeflSliderDisplay}}</i></h6>
+          <vue-slider
+            v-model="toeflSliderValue"
+            ref="toeflSlider"
+            :min=0
+            :max=2000
+            :interval=10
+            tooltip=false
+            :process-style=processStyle
+          />
+        </div>
+
+        <div class="mb-4">
+          <h6><b>ACT:</b><i>{{actSliderDisplay}}</i></h6>
+          <vue-slider
+            v-model="actSliderValue"
+            ref="actSlider"
+            :min=0
+            :max=2000
+            :interval=10
+            tooltip=false
+            :process-style=processStyle
+          />
+        </div>
 
       </div>
 
     </div>
 
-    <player v-for="player in players" :player="player">
+    <button class="btn btn-primary mb-5" @click="getPlayers"> FIND </button>
+
+    <button class="btn btn-secondary mb-5" @click="resetSearch"> RESET </button>
+
+    <player v-for="player in players" :player="player" :key="player._id">
 
     </player>
   </div>
 </template>
 
 <script>
-  import PlayerService from '@/services/PlayersService'
+  import PlayersService from '@/services/PlayersService'
   import Player from './Player.vue'
   import vueSlider from 'vue-slider-component';
 
@@ -72,6 +115,9 @@
         heightSliderDisplay: "moo",
         weightSliderDisplay: "moo",
         ageSliderDisplay: "moo",
+        satSliderDisplay: "moo",
+        toeflSliderDisplay: "moo",
+        actSliderDisplay: "moo",
         processStyle: {
           "backgroundColor": "#787878"
         },
@@ -83,6 +129,12 @@
         heightSliderValue: [150, 210],
         weightSliderValue: [40, 150],
         ageSliderValue: [16, 35],
+        satSliderValue: [0, 2000],
+        toeflSliderValue: [0, 2000],
+        actSliderValue: [0, 2000],
+        search: {
+
+        }
       }
     },
     components: {
@@ -94,61 +146,72 @@
     },
     watch: {
       heightSliderValue: function () {
-        this.heightSliderTrigger();
+        this.heightSliderDisplay = this.sliderTrigger(this.heightSliderValue, 150, 210, "shorter", "taller", "cm", "cm_min", "cm_max");
       },
 
       weightSliderValue: function () {
-        this.weightSliderTrigger()
+        this.weightSliderDisplay = this.sliderTrigger(this.weightSliderValue, 40, 150, "lighter", "heavier", "kg", "kg_min", "kg_max");
       },
 
       ageSliderValue: function () {
-        this.ageSliderTrigger()
-      }
+        this.ageSliderDisplay = this.sliderTrigger(this.ageSliderValue, 16, 35, "younger", "older", "", "age_min", "age_max");
+      },
+
+      satSliderValue: function () {
+        this.satSliderDisplay = this.sliderTrigger(this.satSliderValue, 0, 2000, "less", "more", "", "sat_score_min", "sat_score_max");
+      },
+
+      toeflSliderValue: function () {
+        this.toeflSliderDisplay = this.sliderTrigger(this.toeflSliderValue, 0, 2000, "less", "more", "", "toefl_score_min", "toefl_score_max");
+      },
+
+      actSliderValue: function () {
+        this.actSliderDisplay = this.sliderTrigger(this.actSliderValue, 0, 2000, "less", "more", "", "act_score_min", "act_score_max");
+      },
 
     },
 
     methods: {
       async getPlayers () {
-        console.log('Get players');
-        console.log(this.$route.query);
-        console.log(this.$route);
-        const response = await PlayerService.fetchPlayers(this.$route.fullPath);
+        this.$router.push({ name: "players", query: this.search });
+        const response = await PlayersService.fetchPlayers(this.$route.fullPath);
         this.players = response.data.players
       },
-      heightSliderTrigger () {
-        if (this.heightSliderValue[0] === 150 && this.heightSliderValue[1] === 210) {
-          this.heightSliderDisplay = "any";
-        } else if (this.heightSliderValue[0] === 150) {
-          this.heightSliderDisplay = this.heightSliderValue[1] + "cm or shorter";
-        } else if (this.heightSliderValue[1] === 210) {
-          this.heightSliderDisplay = this.heightSliderValue[0] + "cm or taller";
-        } else {
-          this.heightSliderDisplay = this.heightSliderValue[0] + "cm - " + this.heightSliderValue[1] + "cm";
-        }
-      },
-      weightSliderTrigger () {
-        if (this.weightSliderValue[0] === 40 && this.weightSliderValue[1] === 150) {
-          this.weightSliderDisplay = "any";
-        } else if (this.weightSliderValue[0] === 40) {
-          this.weightSliderDisplay = this.weightSliderValue[1] + "kg or lighter";
-        } else if (this.weightSliderValue[1] === 150) {
-          this.weightSliderDisplay = this.weightSliderValue[0] + "kg or heavier";
-        } else {
-          this.weightSliderDisplay = this.weightSliderValue[0] + "kg - " + this.weightSliderValue[1] + "kg";
-        }
-      },
-      ageSliderTrigger () {
-        if (this.ageSliderValue[0] === 16 && this.ageSliderValue[1] === 35) {
-          this.ageSliderDisplay = "any";
-        } else if (this.ageSliderValue[0] === 16) {
-          this.ageSliderDisplay = this.ageSliderValue[1] + " or younger";
-        } else if (this.ageSliderValue[1] === 35) {
-          this.ageSliderDisplay = this.ageSliderValue[0] + " or older";
-        } else {
-          this.ageSliderDisplay = this.ageSliderValue[0] + " - " + this.ageSliderValue[1];
-        }
-      }
 
+      sliderTrigger (value, lower, upper, lowertxt, uppertxt, unit, lowq, highq) {
+        let display = "";
+        if (value[0] === lower && value[1] === upper) {
+          display = "any";
+          delete this.search[lowq];
+          delete this.search[highq];
+        } else if (value[0] === lower) {
+          display = value[1] + unit + " or " + lowertxt;
+          this.search[highq] = value[1];
+          delete this.search[lowq];
+        } else if (value[1] === upper) {
+          display = value[0] + unit + " or " + uppertxt;
+          this.search[lowq] = value[0];
+          delete this.search[highq];
+        } else {
+          display = value[0] + unit + " - " + value[1] + unit;
+          this.search[highq] = value[1];
+          this.search[lowq] = value[0];
+        }
+
+        return display
+
+      },
+
+      resetSearch () {
+        console.log("Reset");
+        this.heightSliderValue = [150, 210];
+        this.weightSliderValue = [40, 150];
+        this.ageSliderValue = [16, 35];
+        this.satSliderValue = [0, 2000];
+        this.toeflSliderValue = [0, 2000];
+        this.actSliderValue = [0, 2000];
+        this.search =  {}
+      }
       /*
       ,
       async deletePlayer (id) {

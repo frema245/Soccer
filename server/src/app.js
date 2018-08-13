@@ -12,6 +12,106 @@ const mongodb_conn_module = require('./mongodbConnModule');
 let db = mongodb_conn_module.connect();
 
 let Player = require("../models/player");
+let League = require("../models/league");
+let Stat = require("../models/stat");
+
+
+/* STAT */
+
+app.get('/stat', (req, res) => {
+  Stat.find({}, 'owner_id season team league_id country yellow red tot goals ass points mfs inb utb', function (error, stats) {
+    if (error) { console.error(error); }
+    res.send({
+      stats: stats
+    })
+  }).sort({_id:-1})
+});
+
+app.post('/stat', (req, res) => {
+
+  let new_stat = new Stat({
+    owner_id: req.body.owner_id,
+    season: req.body.season,
+    team: req.body.team,
+    league_id: req.body.league_id,
+    country: req.body.country,
+    yellow: req.body.yellow,
+    red: req.body.red,
+    tot: req.body.tot,
+    goals: req.body.goals,
+    ass: req.body.ass,
+    points: req.body.points,
+    mfs: req.body.mfs,
+    inb: req.body.inb,
+    utb: req.body.utb
+  });
+
+  new_stat.save(function (error) {
+    if (error) {
+      console.log(error)
+    }
+    res.send({
+      success: true
+    })
+  })
+});
+
+app.delete('/stat', (req, res) => {
+  let db = req.db;
+  Stat.remove({}, function(err, stat){
+    if (err)
+      res.send(err);
+    res.send({
+      success: true
+    })
+  })
+});
+
+/* LEAGUE */
+
+app.get('/league', (req, res) => {
+  League.find({}, 'name gender country rating', function (error, leagues) {
+    if (error) { console.error(error); }
+    res.send({
+      leagues: leagues
+    })
+  }).sort({_id:-1})
+});
+
+app.post('/league', (req, res) => {
+
+  console.log("Started posting");
+
+  let new_league = new League({
+    name: req.body.name,
+    gender: req.body.gender,
+    country: req.body.country,
+    rating: req.body.rating
+  });
+
+  new_league.save(function (error) {
+    if (error) {
+      console.log(error)
+    }
+    console.log("Seem to succeded");
+    res.send({
+      success: true
+    })
+  })
+});
+
+app.delete('/league', (req, res) => {
+  let db = req.db;
+  League.remove({}, function(err, league){
+    if (err)
+      res.send(err);
+    res.send({
+      success: true
+    })
+  })
+});
+
+/* PLAYER */
 
 app.get('/player', (req, res) => {
 
@@ -109,7 +209,7 @@ app.get('/player', (req, res) => {
   // kg (weight) filtering
   if (kg_max || kg_min) {
     if (!kg_min) {kg_min = 0}
-    if (!kg_max) {kg_max = 250}
+    if (!kg_max) {kg_max = 1000}
     query.where('kg').gt(kg_min-1).lt(kg_max);
   }
 
@@ -134,7 +234,7 @@ app.get('/playerz', (req, res) => {
       players: players
     })
   }).sort({_id:-1})
-})
+});
 
 app.post('/add_player', (req, res) => {
 

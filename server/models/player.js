@@ -19,7 +19,8 @@ let PlayerSchema = new Schema({
   phone_number: { type: String, default: "+46123456789" },
   email: { type: String, default: "random@email.com" },
   skype: { type: String, default: "skypie123" },
-  agency: { type: String, default: null }
+  agency: { type: String, default: null },
+  stats: [{ type: Schema.Types.ObjectId, ref: 'Stat' }]
 });
 
 PlayerSchema.index({name_first: "text", name_last: "text"});

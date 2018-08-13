@@ -12,7 +12,7 @@
               <h5 class="card-title">
                 {{player.name_first}} {{player.name_last}}, {{player.age}}
                 <small class="text-muted">
-                  {{player.nationality}}
+                  {{showFullCountry(player.nationality)}}
                 </small>
               </h5>
 
@@ -54,7 +54,7 @@
 
             <div class="col-12 col-lg-4 d-none d-lg-block">
               <p>
-                About Oscar: <br/>
+                About {{player.name_first}}: <br/>
                 <em>
                   {{player.presentation}}
                 </em>
@@ -97,16 +97,15 @@
     mounted () {
     },
     methods: {
-      showFullCountry (code_input) {
 
-        for (let i = 0; i < obj.length; i++){
-          // look for the entry with a matching `code` value
-          if (obj[i].code == code_input){
-            // we found it
-            // obj[i].name is the matched result
+      showFullCountry (code_input) {
+        let countries =  require("../assets/countries");
+        for (let i = 0; i < countries.length; i++){
+          if (countries[i].code == code_input){
+            return countries[i].name
           }
         }
-
+        return "null"
       }
     }
   }
