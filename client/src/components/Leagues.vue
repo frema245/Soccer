@@ -48,7 +48,7 @@
       </fieldset>
     </form>
 
-    <league v-for="league in leagues" :league="league" :key="league._id">
+    <league v-for="league in leagues" :league="league" @del="deleteLeague" :key="league._id">
 
     </league>
 
@@ -80,7 +80,6 @@
     },
     watch: {
 
-
     },
 
     methods: {
@@ -96,6 +95,10 @@
           country: this.country,
           rating: this.rating
         });
+      },
+      async deleteLeague (id) {
+        await LeaguesService.deleteLeague(id);
+        this.getLeagues();
       }
 
     }

@@ -9,15 +9,19 @@ export default {
     return Api().post('add_player', params)
   },
 
-  updatePlayer (params) {
-    return Api().put('player/' + params.id, params)
+  updatePlayer (params, id) {
+    return Api().put('player/' + id, params)
   },
 
-  getPlayer (params) {
-    return Api().get('player/' + params.id)
+  getPlayer (id) {
+    return Api().get('player/' + id)
   },
 
   deletePlayer (id) {
     return Api().delete('player/' + id)
+  },
+
+  uploadAvatar( file, id ) {
+    return Api().post('player/' + id + '/avatar', file)
   }
 }

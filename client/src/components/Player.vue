@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div v-on:click="viewPlayer">
 
     <div class="card text-white bg-primary mb-3" style="border: 0px">
       <div class="row">
         <div class="col-md-4 col-lg-3">
-          <div class="img-container">
+          <div class="img-container" v-bind:style="{ backgroundImage: 'url(' + avatar_url + ')' }">
           </div>
         </div>
         <div class="card-body col-md-8 col-lg-9">
@@ -50,13 +50,17 @@
               <p>
                 Oscar is a <b>Forward</b> playing positions <b>ST</b> and <b>CF</b>. He has played for <strong>AFK Linköping</strong> in <strong>Division 2</strong> in <strong>Sweden</strong>.
               </p>
+
             </div>
 
             <div class="col-12 col-lg-4 d-none d-lg-block">
               <p>
                 About {{player.name_first}}: <br/>
-                <em>
-                  {{player.presentation}}
+                <em class="d-lg-block d-xl-none">
+                  {{player.presentation.substr(0,90)}}...
+                </em>
+                <em class="d-none d-xl-block">
+                  {{player.presentation.substr(0,180)}}...
                 </em>
               </p>
             </div>
@@ -84,6 +88,7 @@
     name: 'player',
     data () {
       return {
+        avatar_url: null
       }
     },
     props: {
@@ -95,8 +100,16 @@
     components: {
     },
     mounted () {
+      this.setAvatarURL();
     },
     methods: {
+      viewPlayer () {
+        this.$emit('viewPlayer', this.player._id)
+      },
+
+      setAvatarURL() {
+        this.avatar_url = "http://localhost:8081/player/" + this.player._id + "/avatar";
+      },
 
       showFullCountry (code_input) {
         let countries =  require("../assets/countries");

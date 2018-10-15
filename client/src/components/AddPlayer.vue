@@ -1,16 +1,13 @@
 <template>
 
-  <div class="container-medium">
+  <div class="container-medium mb-5">
 
     <h1>Add Player</h1>
-
 
     <form>
       <fieldset>
 
         <div class="row">
-
-          <legend>Legend</legend>
 
           <!-- first name -->
           <div class="form-group col-md-6">
@@ -42,6 +39,112 @@
                 {{ country.name }}
               </option>
             </select>
+          </div>
+
+          <legend>Positions</legend>
+
+
+          <!-- positions : Back -->
+          <div class="form-group col-md-6 text-left">
+
+            <h6>Defender</h6>
+
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="rwbInput" v-model="pos.rwb">
+              <label class="custom-control-label" for="rwbInput">Right Wing Defender</label>
+            </div>
+
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="lwbInput" v-model="pos.lwb">
+              <label class="custom-control-label" for="lwbInput">Left Wing Defender</label>
+            </div>
+
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="cbInput" v-model="pos.cb">
+              <label class="custom-control-label" for="cbInput">Center Defender</label>
+            </div>
+
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="rbInput" v-model="pos.rb">
+              <label class="custom-control-label" for="rbInput">Right Defender</label>
+            </div>
+
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="lbInput" v-model="pos.lb">
+              <label class="custom-control-label" for="lbInput">Left Defender</label>
+            </div>
+
+          </div>
+
+          <!-- positions : Midfielder -->
+          <div class="form-group col-md-6 text-left">
+
+            <h6>Midfielder</h6>
+
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="camInput" v-model="pos.cam">
+              <label class="custom-control-label" for="camInput">Center Attacking Midfielder</label>
+            </div>
+
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="cmInput" v-model="pos.cm">
+              <label class="custom-control-label" for="cmInput">Center Midfielder</label>
+            </div>
+
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="rmInput" v-model="pos.rm">
+              <label class="custom-control-label" for="rmInput">Right Midfielder</label>
+            </div>
+
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="lmInput" v-model="pos.lm">
+              <label class="custom-control-label" for="lmInput">Left Midfielder</label>
+            </div>
+
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="cdmInput" v-model="pos.cdm">
+              <label class="custom-control-label" for="cdmInput">Center Defending Midfielder</label>
+            </div>
+
+          </div>
+
+          <!-- positions : Forward -->
+          <div class="form-group col-md-6 text-left">
+
+            <h6>Forward</h6>
+
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="stInput" v-model="pos.st">
+              <label class="custom-control-label" for="stInput">Striker</label>
+            </div>
+
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="cfInput" v-model="pos.cf">
+              <label class="custom-control-label" for="cfInput">Center Forward</label>
+            </div>
+
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="rwInput" v-model="pos.rw">
+              <label class="custom-control-label" for="rwInput">Right Wing</label>
+            </div>
+
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="lwInput" v-model="pos.lw">
+              <label class="custom-control-label" for="lwInput">Left Wing</label>
+            </div>
+
+          </div>
+
+          <!-- positions : Goalkeeper -->
+          <div class="form-group col-md-6 text-left">
+
+            <h6>Goalkeeper</h6>
+
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="gkInput" v-model="pos.gk">
+              <label class="custom-control-label" for="gkInput">Goalkeeper</label>
+            </div>
+
           </div>
 
           <!-- description -->
@@ -106,7 +209,7 @@
 
         </div>
 
-        <button type="submit" @click="addPlayer" class="btn btn-primary">Submit</button>
+        <button type="button" @click="addPlayer" class="btn btn-primary">Submit</button>
 
       </fieldset>
     </form>
@@ -192,6 +295,24 @@
     name: 'addplayer',
     data () {
       return {
+        pos: {
+          st: false,
+          cf: false,
+          rw: false,
+          lw: false,
+          cam: false,
+          cm: false,
+          rm: false,
+          lm: false,
+          cdm: false,
+          rwb: false,
+          lwb: false,
+          cb: false,
+          rb: false,
+          lb: false,
+          gk: false
+        },
+
         name_first: '',
         name_last: '',
         gender: '',
@@ -207,7 +328,8 @@
         phone_number: '',
         email: '',
         skype: '',
-        countries: require("../assets/countries")
+        countries: require("../assets/countries"),
+        positions_db: require("../assets/positions")
       }
     },
     components: {
@@ -226,7 +348,16 @@
 
       async addPlayer () {
         console.log("addPlayer");
-        await PlayersService.addPlayer({
+
+        for (let key in this.pos) {
+          if (this.pos[key]) {
+            this.positions.push(key)
+          }
+        }
+
+        console.log(this.positions);
+
+        PlayersService.addPlayer({
           name_first: this.name_first,
           name_last: this.name_last,
           gender: this.gender,
@@ -244,45 +375,20 @@
           phone_number: this.phone_number,
           email: this.email,
           skype: this.skype
-        });
-        this.$swal(
-          'Great!',
-          `Your player has been added!`,
-          'success'
-        );
-        this.$router.push({ name: 'Players' })
+        }).then(function (response) {
+          console.log(response);
+        })
+          .catch(function (error) {
+            console.log(error);
+          });
+
+        console.log("Done")
+
       }
     }
   }
 </script>
 <style scoped>
-
-  /*
-
-  .form input, .form textarea {
-    width: 500px;
-    padding: 10px;
-    border: 1px solid #e0dede;
-    outline: none;
-    font-size: 12px;
-  }
-  .form div {
-    margin: 20px;
-  }
-  .app_player_btn {
-    background: #4d7ef7;
-    color: #fff;
-    padding: 10px 80px;
-    text-transform: uppercase;
-    font-size: 12px;
-    font-weight: bold;
-    width: 520px;
-    border: none;
-    cursor: pointer;
-  }
-
-
-   */
 
 
 </style>

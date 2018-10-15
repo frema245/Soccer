@@ -40,23 +40,67 @@
           </div>
 
           <!-- Team -->
-          <div class="form-group col-md-6 col-lg-4">
+          <div class="form-group col-md-4 col-lg-3">
             <label class="col-form-label" for="teamInput">Team</label>
             <input type="text" v-model=team class="form-control" placeholder="IFK Norrköping" id="teamInput">
           </div>
 
           <!-- Total team games -->
           <div class="form-group col-md-4 col-lg-3">
-            <label class="col-form-label" for="totInput">Total</label>
+            <label class="col-form-label" for="totInput">Total games</label>
             <input type="number" v-model=tot class="form-control" placeholder="16" id="totInput">
             <small>Total amount of games the team played in given league in given season</small>
           </div>
 
           <!-- Total team points -->
           <div class="form-group col-md-4 col-lg-3">
-            <label class="col-form-label" for="pointsInput">Total</label>
-            <input type="number" v-model=tot class="form-control" placeholder="16" id="pointsInput">
+            <label class="col-form-label" for="pointsInput">Total points</label>
+            <input type="number" v-model=points class="form-control" placeholder="23" id="pointsInput">
             <small>Total amount of points the team gained in given league in given season</small>
+          </div>
+
+          <!-- Matches from start -->
+          <div class="form-group col-md-4 col-lg-3">
+            <label class="col-form-label" for="mfsInput">Games from start</label>
+            <input type="number" v-model=mfs class="form-control" placeholder="" id="mfsInput">
+          </div>
+
+          <!-- Yellow -->
+          <div class="form-group col-sm-6 col-md-3 col-lg-2">
+            <label class="col-form-label" for="yellowInput">Yellow</label>
+            <input type="number" v-model=yellow class="form-control" placeholder="" id="yellowInput">
+            <small>Yellow cards received</small>
+          </div>
+
+          <!-- Red -->
+          <div class="form-group col-sm-6 col-md-3 col-lg-2">
+            <label class="col-form-label" for="redInput">Red</label>
+            <input type="number" v-model=red class="form-control" placeholder="" id="redInput">
+            <small>Red cards received</small>
+          </div>
+
+          <!-- Goals -->
+          <div class="form-group col-sm-6 col-md-3 col-lg-2">
+            <label class="col-form-label" for="goalsInput">Goals</label>
+            <input type="number" v-model=goals class="form-control" placeholder="" id="goalsInput">
+          </div>
+
+          <!-- Assist -->
+          <div class="form-group col-sm-6 col-md-3 col-lg-2">
+            <label class="col-form-label" for="assInput">Assist</label>
+            <input type="number" v-model=ass class="form-control" placeholder="" id="assInput">
+          </div>
+
+          <!-- Utbytt -->
+          <div class="form-group col-sm-6 col-md-3 col-lg-2">
+            <label class="col-form-label" for="utbInput">Utbytt</label>
+            <input type="number" v-model=utb class="form-control" placeholder="" id="utbInput">
+          </div>
+
+          <!-- Inbytt -->
+          <div class="form-group col-sm-6 col-md-3 col-lg-2">
+            <label class="col-form-label" for="inbInput">Inbytt</label>
+            <input type="number" v-model=inb class="form-control" placeholder="" id="inbInput">
           </div>
 
         </div>
@@ -66,7 +110,7 @@
       </fieldset>
     </form>
 
-    <stat v-for="stat in stats" :stat="stat" :key="stat._id">
+    <stat v-for="stat in stats" :stat="stat" @del="deleteStat" :key="stat._id">
 
     </stat>
 
@@ -78,7 +122,7 @@
   import PlayersService from '@/services/PlayersService'
   import LeaguesService from '@/services/LeaguesService'
   import StatsService from '@/services/StatsService'
-  import Stat from './Stat.vue'
+  import Stat_admin from './Stat_admin.vue'
 
   export default {
     name: "leagues",
@@ -108,7 +152,7 @@
       }
     },
     components: {
-      Stat
+      Stat_admin
     },
     mounted () {
       this.getStats();
@@ -150,6 +194,10 @@
           inb: this.inb,
           utb: this.utb
         });
+      },
+      async deleteStat (id) {
+          await StatsService.deleteStat(id);
+          this.getStats();
       }
     }
   }

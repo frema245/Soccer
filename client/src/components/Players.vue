@@ -1,8 +1,6 @@
 <template>
   <div class="container">
 
-    <h2>Match players to your needs</h2>
-
     <div class="row" style="user-select: none;">
 
       <div class="col-md-6">
@@ -91,13 +89,48 @@
 
       </div>
 
+      <div class="col-12 mb-4">
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="posFilerInput" v-model="posFilter">
+          <label class="custom-control-label" for="posFilerInput">Select positions</label>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-3 mb-4" v-show="posFilter">
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="forwardInput" v-model="pos.forward">
+          <label class="custom-control-label" for="forwardInput">Forward</label>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-3 mb-4" v-show="posFilter">
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="midfielderInput" v-model="pos.midfielder">
+          <label class="custom-control-label" for="midfielderInput">Midfielder</label>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-3 mb-4" v-show="posFilter">
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="defenderInput" v-model="pos.defender">
+          <label class="custom-control-label" for="defenderInput">Defender</label>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-3 mb-4" v-show="posFilter">
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="goalkeeperInput" v-model="pos.goalkeeper">
+          <label class="custom-control-label" for="goalkeeperInput">Goalkeeper</label>
+        </div>
+      </div>
+
     </div>
 
     <button class="btn btn-primary mb-5" @click="getPlayers"> FIND </button>
 
     <button class="btn btn-secondary mb-5" @click="resetSearch"> RESET </button>
 
-    <player v-for="player in players" :player="player" :key="player._id">
+    <player v-for="player in players" :player="player" :key="player._id" @viewPlayer="viewPlayer">
 
     </player>
   </div>
@@ -112,6 +145,15 @@
     name: 'players',
     data () {
       return {
+        posFilter: false,
+
+        pos: {
+          forward: false,
+          midfielder: false,
+          defender: false,
+          goalkeeper: false,
+        },
+
         heightSliderDisplay: "moo",
         weightSliderDisplay: "moo",
         ageSliderDisplay: "moo",
@@ -134,7 +176,8 @@
         actSliderValue: [0, 2000],
         search: {
 
-        }
+        },
+        positions_db: require("../assets/positions")
       }
     },
     components: {
@@ -145,6 +188,7 @@
       this.getPlayers()
     },
     watch: {
+
       heightSliderValue: function () {
         this.heightSliderDisplay = this.sliderTrigger(this.heightSliderValue, 150, 210, "shorter", "taller", "cm", "cm_min", "cm_max");
       },
@@ -169,10 +213,27 @@
         this.actSliderDisplay = this.sliderTrigger(this.actSliderValue, 0, 2000, "less", "more", "", "act_score_min", "act_score_max");
       },
 
+      posFilter: function () {
+        this.allPosFalse();
+      }
+
     },
 
     methods: {
       async getPlayers () {
+
+        delete this.search["positions"];
+
+        if (this.posFilter) {
+          this.search["positions"] = [];
+          if (this.pos.forward) {this.search["positions"].push("st", "cf", "rw", "lw")}
+          if (this.pos.midfielder) {this.search["positions"].push("cam", "cm", "rm", "lm", "cdm");}
+          if (this.pos.defender) {this.search["positions"].push("rwb", "lwb", "cb", "rb", "lb")}
+          if (this.pos.goalkeeper) {this.search["positions"].push("gk")}
+        }
+
+        console.log(this.search);
+
         this.$router.push({ name: "players", query: this.search });
         const response = await PlayersService.fetchPlayers(this.$route.fullPath);
         this.players = response.data.players
@@ -202,6 +263,13 @@
 
       },
 
+      allPosFalse () {
+        this.pos.forward = false;
+        this.pos.midfielder = false;
+        this.pos.defender = false;
+        this.pos.goalkeeper = false;
+      },
+
       resetSearch () {
         console.log("Reset");
         this.heightSliderValue = [150, 210];
@@ -210,8 +278,14 @@
         this.satSliderValue = [0, 2000];
         this.toeflSliderValue = [0, 2000];
         this.actSliderValue = [0, 2000];
-        this.search =  {}
-      }
+        this.search =  {};
+        this.posFilter = false;
+      },
+
+      viewPlayer (player_id) {
+        this.$emit('viewPlayer', player_id);
+      },
+
       /*
       ,
       async deletePlayer (id) {

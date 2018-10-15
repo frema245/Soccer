@@ -15,6 +15,7 @@
         {{league.rating}}
       </div>
     </div>
+    <div class="col"><button type="submit" @click="del" class="btn btn-secondary mb-5">Del</button></div>
   </div>
 
 </template>
@@ -36,7 +37,9 @@
     mounted () {
     },
     methods: {
-
+      del () {
+        this.$emit('del', this.league._id)
+      },
       showFullCountry (code_input) {
         let countries =  require("../assets/countries");
         for (let i = 0; i < countries.length; i++){

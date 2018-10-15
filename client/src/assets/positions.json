@@ -1,0 +1,20 @@
+[
+  {"position": "ST", "name": "Striker", "category": "Forward" },
+  {"position": "CF", "name": "Center Forward", "category": "Forward" },
+  {"position": "RW", "name": "Right Wing", "category": "Forward" },
+  {"position": "LW", "name": "Left Wing", "category": "Forward" },
+
+  {"position": "CAM", "name": "Center Attacking Midfielder", "category": "Midfielder" },
+  {"position": "CM", "name": "Center Midfielder", "category": "Midfielder" },
+  {"position": "RM", "name": "Center Midfielder", "category": "Midfielder" },
+  {"position": "LM", "name": "Center Midfielder", "category": "Midfielder" },
+  {"position": "CDM", "name": "Center Defending Midfielder", "category": "Midfielder" },
+
+  {"position": "RWB", "name": "Right Wing Defender", "category": "Defender" },
+  {"position": "LWB", "name": "Left Wing Defender", "category": "Defender" },
+  {"position": "CB", "name": "Center Defender", "category": "Defender" },
+  {"position": "RB", "name": "Right Defender", "category": "Defender" },
+  {"position": "LB", "name": "Left Defender", "category": "Defender" },
+
+  {"position": "GK", "name": "Goalkeeper", "category": "Goalkeeper" }
+]

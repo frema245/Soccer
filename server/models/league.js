@@ -2,10 +2,10 @@ let mongoose = require("mongoose");
 let Schema = mongoose.Schema;
 
 let LeagueSchema = new Schema({
-  name: { type: String, default: "Superettan" },
-  gender: {type: String, default: "male"},
-  country: {type: String, default: "Sweden"},
-  rating: { type: Number, default: 5 }
+  name: { type: String, required: true },
+  gender: {type: String, required: true },
+  country: {type: String, required: true },
+  rating: { type: Number, required: true }
 });
 
 let League = mongoose.model("League", LeagueSchema);
